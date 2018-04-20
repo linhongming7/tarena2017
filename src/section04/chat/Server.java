@@ -35,7 +35,6 @@ public class Server {
         server = new ServerSocket(9088);
 
         allOut= new HashMap<String,PrintWriter>();
-
     }
 
     /**
@@ -48,10 +47,10 @@ public class Server {
 
     /**
     * 将给定的输出流从共享集合删除
-    * @param out
+    * @param nickName
     */
-    private synchronized void removeOut(PrintWriter out ){
-        allOut.remove(out);
+    private synchronized void removeOut(String nickName){
+        allOut.remove(nickName);
     }
 
     /**
@@ -97,7 +96,6 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
     
     public static void main(String[] args)
@@ -111,7 +109,7 @@ public class Server {
         }
     }
 
-    public static void eat(){}//测试内部类调用外部类静态方法
+//    public static void eat(){}//测试内部类调用外部类静态方法
 
     /*
      *  该线程负责处理一个客户端的交互
@@ -180,13 +178,17 @@ public class Server {
                  */
                 while((message = br.readLine())!=null){
                     if(message.startsWith("@") && message.matches("@.+:.*")){
-                        System.out.println("+++++++++++");
                         int i = message.indexOf(':');
                         String toNickName = message.substring(1,i);
-                        String myMessage = message.substring(i+1);
-                        sendMessage(toNickName,"["+nickName +"]悄悄对你说："+myMessage);
-                        sendMessage(nickName,"你悄悄对["+toNickName+"]说："+myMessage);
-                        continue;
+                        if(allOut.containsKey(toNickName)){
+                            String myMessage = message.substring(i+1);
+                            sendMessage(toNickName,"["+nickName +"]悄悄对你说："+myMessage);
+                            sendMessage(nickName,"你悄悄对["+toNickName+"]说："+myMessage);
+                            continue; 
+                        }else{
+                            sendMessage(nickName,"用户名不存在或已下线！");
+                            continue;
+                        }
                     }
 
                     //广播消息
@@ -199,7 +201,7 @@ public class Server {
                  * 处理当前客户端断开后的逻辑
                  */
                 //将该客户端的输出流从共享集合中删除
-                removeOut(pw);
+                removeOut(nickName);
 
                 sendMessage(nickName +"下线了！");
                 try {

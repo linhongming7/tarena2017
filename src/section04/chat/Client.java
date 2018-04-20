@@ -84,17 +84,6 @@ public class Client {
                 pw.println(s.nextLine());
             }
 
-            /*
-            while(b){
-                String wr = s.nextLine();
-                if(!wr.equals("exit")){
-                    pw.println(wr);
-                }else{
-                    b = false;
-                }
-            }*/
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,7 +97,6 @@ public class Client {
             e.printStackTrace();
             System.out.println("客户端启动失败！");
         }
-
     }
 
     /**
