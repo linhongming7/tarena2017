@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /** TCP协议：
- *  聊天室客户端：
+ *   聊天室客户端：
  *
  */
 public class Client {
